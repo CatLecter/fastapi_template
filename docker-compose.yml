@@ -1,0 +1,43 @@
+services:
+  app:
+    container_name: app
+    hostname: app
+    build:
+      context: ./src/app
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./src/app/.env
+    environment:
+      STORAGE_URI: "postgresql+asyncpg://admin:admin@postgres/db"
+    ports:
+      - 8000:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: postgres:16.1-alpine3.19
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_HOST: "0.0.0.0"
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: "db"
+    ports:
+      -  5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  postgres:
