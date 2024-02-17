@@ -1,6 +1,6 @@
 asyncpg==0.29.0
-fastapi[all]==0.109.0
+fastapi[all]==0.109.2
 gunicorn==21.2.0
 rodi==2.0.6
-SQLAlchemy[asyncio]==2.0.25
-uvicorn[standard]==0.27.0.post1
+SQLAlchemy[asyncio]==2.0.27
+uvicorn[standard]==0.27.1

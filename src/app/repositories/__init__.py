@@ -1,3 +1,4 @@
-from app.repositories.data import DataRepository
+from app.repositories.ticket import TicketRepository
+from app.repositories.user import UserRepository
 
-__all__ = ['DataRepository']
+__all__ = ['TicketRepository', 'UserRepository']

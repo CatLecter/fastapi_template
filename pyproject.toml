@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "test-plinor"
+name = "fastapi_template"
 version = "0.1.0"
 description = ""
 authors = ["Vasilii Safronov <vasi1988@mail.ru>"]
@@ -8,10 +8,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = {extras = ["all"], version = "^0.109.0"}
+fastapi = {extras = ["all"], version = "^0.109.2"}
 rodi = "^2.0.6"
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.25"}
-uvicorn = {extras = ["standard"], version = "^0.27.0.post1"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.27"}
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
 asyncpg = "^0.29.0"
 gunicorn = "^21.2.0"
 

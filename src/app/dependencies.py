@@ -1,8 +1,8 @@
 from rodi import Container
 
 from app.database import Engine, Transaction
-from app.repositories import DataRepository
-from app.services import DataService
+from app.repositories import TicketRepository, UserRepository
+from app.services import TicketService, UserService
 
 container = Container()
 
@@ -10,9 +10,15 @@ container = Container()
 def init_dependencies() -> None:
     container.add_singleton(Engine)
     container.add_scoped(Transaction)
-    container.add_transient(DataService)
-    container.add_scoped(DataRepository)
+    container.add_scoped(TicketRepository)
+    container.add_scoped(UserRepository)
+    container.add_transient(TicketService)
+    container.add_transient(UserService)
 
 
-def get_data_service() -> DataService:
-    return container.resolve(DataService)
+def get_ticket_service() -> TicketService:
+    return container.resolve(TicketService)
+
+
+def get_user_service() -> UserService:
+    return container.resolve(UserService)
