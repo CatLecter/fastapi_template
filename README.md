@@ -1,14 +1,14 @@
-## Тестовое задание ООО РЦ "Плинор"
+## FastAPI template
 
-#### Для запуска в контейнере:
+#### To run in a container:
 
-1. Создать файл с переменными окружения:
+1. Create a file with environment variables:
 
 ```shell
 cp src/app/example.env src/app/.env
 ```
 
-2. Поднять контейнеры:
+2. Run containers:
 
 ```shell
 docker compose up -d --build
