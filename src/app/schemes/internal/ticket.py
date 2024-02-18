@@ -37,3 +37,10 @@ class InternalTicketResponse(InternalTicketRequest):
     ticket_id: UUID
     created_at: datetime
     updated_at: datetime
+
+
+@dataclass
+class InternalBriefTicketResponse:
+    __slots__ = ['ticket_id', 'event_name']
+    ticket_id: UUID
+    event_name: str

@@ -16,3 +16,10 @@ class InternalUserResponse(InternalUserRequest):
     user_id: UUID
     created_at: datetime
     updated_at: datetime
+
+
+@dataclass
+class InternalBriefUserResponse:
+    __slots__ = ['user_id', 'full_name']
+    user_id: UUID
+    full_name: str
