@@ -1,12 +1,19 @@
-FROM python:3.12.2-alpine3.19
+FROM python:3.12-alpine
 
-EXPOSE 8000
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 WORKDIR /usr/src
 
-COPY . ./app
+RUN pip install --upgrade pip && \
+    pip install poetry && \
+    poetry config virtualenvs.create false
 
-RUN pip install -U pip && pip install --no-cache-dir -r app/requirements.txt
+COPY ../pyproject.toml pyproject.toml
+
+RUN poetry install --only main
+
+COPY ./src/app app
 
 CMD gunicorn app.main:app \
     --workers ${WORKERS} \

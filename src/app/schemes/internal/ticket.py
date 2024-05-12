@@ -4,10 +4,9 @@ from uuid import UUID
 
 
 @dataclass
-class InternalTicketRequest:
+class InternalRequestTicket:
     __slots__ = [
         'buyer_mobile_phone',
-        'visitor_id',
         'visitor_mobile_phone',
         'visitor_full_name',
         'event_name',
@@ -19,7 +18,6 @@ class InternalTicketRequest:
         'status',
     ]
     buyer_mobile_phone: str
-    visitor_id: UUID
     visitor_mobile_phone: str
     visitor_full_name: str
     event_name: str
@@ -29,18 +27,3 @@ class InternalTicketRequest:
     place_number: int
     ticket_price: float
     status: str
-
-
-@dataclass
-class InternalTicketResponse(InternalTicketRequest):
-    __slots__ = ['ticket_id', 'created_at', 'updated_at']
-    ticket_id: UUID
-    created_at: datetime
-    updated_at: datetime
-
-
-@dataclass
-class InternalBriefTicketResponse:
-    __slots__ = ['ticket_id', 'event_name']
-    ticket_id: UUID
-    event_name: str

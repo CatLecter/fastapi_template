@@ -1,3 +1,6 @@
+import backoff
+from asyncpg.exceptions import TooManyConnectionsError
+from sqlalchemy import Result
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
@@ -20,22 +23,28 @@ class Engine:
 
 class Transaction:
     def __init__(self, engine: Engine):
-        self.engine = engine
-        self.session: AsyncSession | None = None
+        self._engine = engine
+        self._session: AsyncSession | None = None
 
     async def __aenter__(self):
-        self.session: AsyncSession = self.engine.async_session()
+        self._session: AsyncSession = self._engine.async_session()
 
     async def __aexit__(self, exc_type, *args):
-        if self.session:
+        if self._session:
             await self.rollback()
-            await self.session.close()
-            self.session = None
+            await self._session.close()
+            self._session = None
 
     async def commit(self):
-        if self.session:
-            await self.session.commit()
+        if self._session:
+            await self._session.commit()
 
     async def rollback(self):
-        if self.session:
-            await self.session.rollback()
+        if self._session:
+            await self._session.rollback()
+
+    @backoff.on_exception(
+        backoff.expo, TooManyConnectionsError, max_time=settings.MAX_TIME, max_tries=settings.MAX_TRIES
+    )
+    async def execute(self, *args, **kwargs) -> Result:
+        return await self._session.execute(*args, **kwargs)

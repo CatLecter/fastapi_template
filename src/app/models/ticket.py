@@ -13,9 +13,6 @@ class Ticket(Base):
 
     ticket_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     buyer_mobile_phone: Mapped[VARCHAR] = mapped_column(String(20), nullable=False)
-    visitor_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey(column='users.user_id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False
-    )
     visitor_mobile_phone: Mapped[VARCHAR] = mapped_column(String(20), nullable=False)
     visitor_full_name: Mapped[TEXT] = mapped_column(String, nullable=False)
     event_name: Mapped[TEXT] = mapped_column(String, nullable=False)

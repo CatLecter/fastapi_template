@@ -3,8 +3,8 @@ services:
     container_name: app
     hostname: app
     build:
-      context: ./src/app
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/app/Dockerfile
     restart: on-failure
     env_file:
       - ./src/app/.env

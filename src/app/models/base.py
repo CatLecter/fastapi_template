@@ -15,3 +15,10 @@ class Base(DeclarativeBase):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.current_timestamp(), onupdate=func.current_timestamp()
     )
+
+    def to_dict(self, exclude: set[str] | None = None) -> dict:
+        delattr(self, '_sa_instance_state')
+        if exclude:
+            for field in exclude:
+                delattr(self, field)
+        return self.__dict__

@@ -9,9 +9,12 @@ container = Container()
 
 def init_dependencies() -> None:
     container.add_singleton(Engine)
+
     container.add_scoped(Transaction)
+
     container.add_scoped(TicketRepository)
     container.add_scoped(UserRepository)
+
     container.add_transient(TicketService)
     container.add_transient(UserService)
 

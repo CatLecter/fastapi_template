@@ -1,42 +1,39 @@
 from dataclasses import asdict
+from typing import Optional, Sequence
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import Result, select
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.exc import IntegrityError, ProgrammingError
-from sqlalchemy.ext.asyncio import AsyncResult
 from sqlalchemy.orm import load_only
 
 from app.database import Transaction
 from app.models import Ticket
-from app.schemes.internal import InternalBriefTicketResponse
-from app.schemes.internal import InternalTicketRequest, InternalTicketResponse
-from app.utils import to_dict
+from app.schemes.external import ResponseBriefTicket, ResponseTicket
+from app.schemes.internal import InternalRequestTicket
 
 
 class TicketRepository:
     def __init__(self, transaction: Transaction):
         self.transaction = transaction
 
-    async def add_ticket(self, item: InternalTicketRequest) -> InternalTicketResponse | None:
+    async def add(self, item: InternalRequestTicket) -> ResponseTicket:
         stmt = insert(Ticket).values(**asdict(item)).returning(Ticket)
-        try:
-            cursor: AsyncResult = await self.transaction.session.execute(stmt)  # noqa
-        except (ProgrammingError, IntegrityError):
-            return None
-        result: Ticket | None = cursor.scalar_one_or_none()  # noqa
-        return InternalTicketResponse(**to_dict(result))
+        cursor: Result = await self.transaction.execute(stmt)
+        result: Ticket = cursor.scalar_one()
+        return ResponseTicket(**result.to_dict())
 
-    async def get_tickets_by_user_id(self, user_id: UUID) -> list[InternalBriefTicketResponse] | None:
-        stmt = (
-            select(Ticket).where(Ticket.visitor_id == user_id).options(load_only(Ticket.ticket_id, Ticket.event_name))
-        )
-        cursor: AsyncResult = await self.transaction.session.execute(stmt)  # noqa
-        result: list[Ticket] | None = cursor.scalars().all()  # noqa
-        return [InternalBriefTicketResponse(**to_dict(_)) for _ in result]
-
-    async def get_ticket(self, ticket_id: UUID) -> InternalTicketResponse | None:
+    async def get_by_id(self, ticket_id: UUID) -> Optional[ResponseTicket]:
         stmt = select(Ticket).where(Ticket.ticket_id == ticket_id)
-        cursor: AsyncResult = await self.transaction.session.execute(stmt)  # noqa
-        result: Ticket | None = cursor.scalar_one_or_none()  # noqa
-        return InternalTicketResponse(**to_dict(result)) if result else None
+        cursor: Result = await self.transaction.execute(stmt)
+        result: Optional[Ticket] = cursor.scalar_one_or_none()
+        return ResponseTicket(**result.to_dict()) if result else None
+
+    async def get_by_user_mobile_phone(self, mobile_phone: str) -> Optional[list[ResponseBriefTicket]]:
+        stmt = (
+            select(Ticket)
+            .where(Ticket.visitor_mobile_phone == mobile_phone)
+            .options(load_only(Ticket.ticket_id, Ticket.event_name))
+        )
+        cursor: Result = await self.transaction.execute(stmt)
+        result: Sequence[Ticket] = cursor.scalars().all()
+        return [ResponseBriefTicket(**_.to_dict()) for _ in result] if result else None
