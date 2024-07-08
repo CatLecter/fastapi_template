@@ -5,7 +5,7 @@
 1. Create a file with environment variables:
 
 ```shell
-cp src/app/example.env src/app/.env
+cp src/example.env src/.env
 cp postgres/example.env postgres/.env
 ```
 
