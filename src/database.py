@@ -30,7 +30,7 @@ class Transaction:
         self._session: AsyncSession | None = None
 
     async def __aenter__(self):
-        self._session: AsyncSession = self._engine.async_session()
+        self._session = self._engine.async_session()
 
     async def __aexit__(self, exc_type, *args):
         if self._session:
@@ -53,4 +53,5 @@ class Transaction:
         max_tries=settings.MAX_TRIES,
     )
     async def execute(self, *args, **kwargs) -> Result:
-        return await self._session.execute(*args, **kwargs)
+        if self._session:
+            return await self._session.execute(*args, **kwargs)
