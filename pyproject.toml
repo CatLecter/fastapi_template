@@ -7,6 +7,10 @@ license = "MIT"
 readme = "README.md"
 package-mode = false
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = { extras = ["all"], version = "^0.111.0" }
@@ -23,10 +27,6 @@ blue = "^0.9.1"
 ruff = "^0.5.1"
 pre-commit = "^3.7.1"
 mypy = "^1.10.1"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.blue]
 line-length = 120
@@ -57,3 +57,7 @@ select = [
 quote-style = "single"
 indent-style = "space"
 docstring-code-format = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
