@@ -1,17 +1,20 @@
-FROM python:3.12-alpine
+FROM python:3.13-alpine3.21
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV UV_SYSTEM_PYTHON 1
+ENV UV_NO_CACHE True
+ENV UV_PYTHON_DOWNLOADS never
 
 WORKDIR /usr
 
 RUN pip install --upgrade pip && \
-    pip install poetry && \
-    poetry config virtualenvs.create false
+    pip install uv
 
 COPY ../pyproject.toml pyproject.toml
+COPY ../uv.lock uv.lock
 
-RUN poetry install --only main
+RUN uv pip install -r pyproject.toml
 
 COPY ./src src
 

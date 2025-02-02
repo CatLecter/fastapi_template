@@ -32,7 +32,10 @@ class TicketService:
             result: Optional[ResponseTicket] = await self.ticket_repository.add(ticket)
             await self.transaction.commit()
             if not result:
-                raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail='Failed to create ticket')
+                raise HTTPException(
+                    status_code=HTTPStatus.BAD_REQUEST,
+                    detail='Failed to create ticket',
+                )
             return result
 
     async def get_by_id(self, ticket_id: UUID) -> ResponseTicket:

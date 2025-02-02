@@ -1,7 +1,11 @@
 import backoff
 from asyncpg.exceptions import TooManyConnectionsError
 from sqlalchemy import Result
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from src.settings import settings
 
