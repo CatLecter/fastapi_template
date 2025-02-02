@@ -6,7 +6,6 @@
 
 ```shell
 cp src/example.env src/.env
-cp postgres/example.env postgres/.env
 ```
 
 2. Run containers:
